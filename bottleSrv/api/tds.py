@@ -2,6 +2,7 @@ from flask import Blueprint
 from flask_restful import Api, Resource, url_for, reqparse
 from datetime import datetime
 from ..db import get_db
+from ..export import tdsDataToExcel
 
 api_bp = Blueprint('tds', __name__, url_prefix='/api/tds')
 api = Api(api_bp)
@@ -14,9 +15,10 @@ class Tds(Resource): # /api/tds
         parser.add_argument('size', type=str, required=True, location='args')
         parser.add_argument('start_time', type=str, location='args')
         parser.add_argument('end_time', type=str, location='args')
+        parser.add_argument('export', type=bool, location='args')
 
         args = parser.parse_args()
-        page, size, start_time, end_time = args.values()
+        page, size, start_time, end_time, export = args.values()
 
         # 데이터베이스에서 값 읽기
         db = get_db()
@@ -51,10 +53,19 @@ class Tds(Resource): # /api/tds
             error = e
 
         if error == None:
-            return {
-                'success': True,
-                'result': tds_data
-            }, 200
+            if export == None:
+                return {
+                    'success': True,
+                    'result': tds_data
+                }, 200
+            else:
+                url = tdsDataToExcel(raw_data)
+                return {
+                    'success': True,
+                    'result': {
+                        'url': url
+                    }
+                }
         else:
             return {
                 'success': False,

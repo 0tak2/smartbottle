@@ -1,6 +1,6 @@
 import os
 from flask import Flask, render_template
-from flask_restful import Resource, Api
+from .export import registerInstancePathForExport
 
 # 플라스크 인스턴스를 생성하고 반환
 # (터미널에서 flask run 커맨드 사용하여 반환된 인스턴스 실행)
@@ -9,6 +9,7 @@ def create_app():
     app.config.from_mapping(
         DATABASE=os.path.join(app.instance_path, 'data.sqlite'), # 데이터베이스 경로 지정
     )
+    registerInstancePathForExport(app.instance_path)
 
     # 앱 인스턴스 패스 없으면 생성
     try:

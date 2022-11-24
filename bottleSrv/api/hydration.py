@@ -2,6 +2,7 @@ from flask import Blueprint
 from flask_restful import Api, Resource, reqparse
 from datetime import datetime
 from ..db import get_db
+from ..export import hydrationDataToExcel
 
 api_bp = Blueprint('hydration', __name__, url_prefix='/api/hydration')
 api = Api(api_bp)
@@ -14,9 +15,10 @@ class Hydration(Resource): # /api/hydration
         parser.add_argument('size', type=str, required=True, location='args')
         parser.add_argument('start_time', type=str, location='args')
         parser.add_argument('end_time', type=str, location='args')
+        parser.add_argument('export', type=bool, location='args')
 
         args = parser.parse_args()
-        page, size, start_time, end_time = args.values()
+        page, size, start_time, end_time, export = args.values()
 
         # 데이터베이스에서 값 읽기
         db = get_db()
@@ -52,10 +54,19 @@ class Hydration(Resource): # /api/hydration
             error = e
 
         if error == None:
-            return {
-                'success': True,
-                'result': hydration_data
-            }, 200
+            if export == None:
+                return {
+                    'success': True,
+                    'result': hydration_data
+                }, 200
+            else:
+                url = hydrationDataToExcel(raw_data)
+                return {
+                    'success': True,
+                    'result': {
+                        'url': url
+                    }
+                }
         else:
             return {
                 'success': False,
@@ -77,7 +88,7 @@ class Hydration(Resource): # /api/hydration
             return {
                 'success': False,
                 'payload': {
-                    'type': 'tds',
+                    'type': 'hydration',
                     'time': time,
                     'value': value
                 },
@@ -87,7 +98,7 @@ class Hydration(Resource): # /api/hydration
 
         print(f'[{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}] New Volume data (time="{time_str}" value={value})')
 
-        # 우선 데이터베이스에서 이전 볼륨 값을 읽는다 // TO DO: 여기부터 계속
+        # 우선 데이터베이스에서 이전 볼륨 값을 읽는다
         db = get_db()
         cursor = db.cursor()
         try:
@@ -98,7 +109,7 @@ class Hydration(Resource): # /api/hydration
             return {
                 'success': False,
                 'payload': {
-                    'type': 'tds',
+                    'type': 'hydration',
                     'time': time,
                     'value': value
                 },

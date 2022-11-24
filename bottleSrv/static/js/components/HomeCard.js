@@ -1,4 +1,4 @@
-import { ref, computed } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js'
+import { computed } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js'
 
 export default {
     props: [
@@ -70,7 +70,7 @@ export default {
     template: `
         <div class="home-card full-width">
             <div class="home-card-panel" v-bind:class="hydrationElapsedTime.warning">
-                <div class="panel-title">하이드레이션</div>
+                <div class="panel-title">수분 섭취</div>
                 <div class="panel-value">{{hydrationSign}}{{Math.abs(value_volumeDiffer)}}ml</div>
                 <div>
                     {{created_hydrationData}} <br />

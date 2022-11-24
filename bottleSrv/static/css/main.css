@@ -10,6 +10,21 @@ body, p, div {
     line-height: 1.5;
 }
 
+button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    text-align: center;
+    font-family: Gothic A1, Noto Sans KR, sans-serif;
+    font-size: 18px;
+    padding-top: 5px;
+    width: auto;
+    border: none;
+    border-radius: 4px;
+    background: #566270;
+    color: #ffffff;
+}
+
 #app {
     width: 100%;
     height: 100%;
@@ -39,6 +54,7 @@ body, p, div {
 .nav-items {
     display: flex;
     justify-content: space-around;
+    cursor: pointer;
 }
 
 .home-card {
@@ -85,19 +101,47 @@ body, p, div {
     margin-top: 10px;
 }
 
-button {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
+.table {
+    width: 100%;
+    display: table;
+    margin: 30px auto 10px auto;
+}
+
+.table-header {
+    display: table-row;
+    font-weight: 700;
     text-align: center;
-    font-family: Gothic A1, Noto Sans KR, sans-serif;
-    font-size: 18px;
-    padding-top: 5px;
-    width: auto;
-    border: none;
-    border-radius: 4px;
-    background: #566270;
-    color: #ffffff;
+}
+
+.table-row {
+    display: table-row;
+    text-align: center;
+}
+
+.table-cell {
+    display: table-cell;
+    border: solid;
+    border-width: thin;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.date-control-wrapper {
+    padding-top: 15px;
+}
+
+.page-control-wrapper {
+    text-align: center;
+}
+
+.page-control-indicator {
+    margin: 0 5px;
+    padding-top: 3px;
+}
+
+.export-btn {
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 @media (max-width: 650px) {
@@ -105,9 +149,15 @@ button {
         font-size: 24px;
     }
 
+    input.date-control-input {
+        width: 200px;
+        height: 30px;
+        font-size: 24px;
+    }
+
     button {
         font-size: 26px;
-        padding-top: 3spx;
+        padding-top: 3px;
     }
 
     .nav {
@@ -121,7 +171,11 @@ button {
 
     .panel-value {
         text-align: center;
-        font-size: x-large;
+        font-size: 48px;
         font-weight: 700;
+    }
+
+    .table {
+        width: 95%;
     }
   }

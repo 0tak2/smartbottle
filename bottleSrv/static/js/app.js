@@ -27,7 +27,10 @@ createApp({
     },
     template: `
         <div class="container">
-            <nav-bar v-bind:features="features" v-on:selected="(feature) => activeFeature = feature"></nav-bar>
+            <nav-bar
+                v-bind:features="features"
+                v-on:selected="(feature) => activeFeature = feature">
+            </nav-bar>
             <home-container v-if="activeFeature === features.HOME"></home-container>
             <hydration-container v-if="activeFeature === features.HYDR"></hydration-container>
             <tds-container v-if="activeFeature === features.TDS"></tds-container>

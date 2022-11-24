@@ -63,6 +63,7 @@ export default {
         }
     },
     template: `
+        <h1>홈</h1>
         <div v-if="!isLoading" class="full-width">
             <home-card
                 v-bind:value_volumeDiffer="latestData.hydration.value_differ"
