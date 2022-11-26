@@ -78,14 +78,14 @@ def sendData(type, time, value):
     else:
         raise Exception('잘못된 데이터 타입입니다.')
     
-    requests.post(url, json={"key": "value"})
+    requests.post(url, json=data)
 
 def getLastHydration():
     url = baseURL + '/api/hydration/last'
     response = requests.get(url)
     responseDict = response.json()
 
-    hydratedTimeStr = responseDict['result']['time']
+    hydratedTimeStr = responseDict['result']['created']
     hydratedTime = datetime.datetime.strptime(hydratedTimeStr, '%Y-%m-%d %H:%M:%S')
     hydratedVolume = responseDict['result']['value_differ'] * -1
     return hydratedTime, hydratedVolume
@@ -95,7 +95,7 @@ def getLastTds():
     response = requests.get(url)
     responseDict = response.json()
 
-    tdsValue = responseDict['result'][0]['value_differ'] * -1
+    tdsValue = responseDict['result'][0]['value_tds']
     return tdsValue
 
 def main():
@@ -124,26 +124,26 @@ def main():
             
             # 서버에서 최근 데이터를 받아와 LED 조작
             hydratedTime, hydratedVolume = getLastHydration()
-            elapsedTime = currentTime - hydratedTime
+            elapsedTime = currentTimeObj - hydratedTime
             lastTdsValue = getLastTds()
             print(f'[{currentTime}] 서버로부터 최근 데이터를 가져왔습니다.')
             print(f'마지막 수분 섭취 시간: {hydratedTime}({elapsedTime} 경과)')
             print('마지막 수분 섭취 용량: ', hydratedVolume, 'ml')
             print('최근 TDS 수치: ', lastTdsValue, 'mg/L(ppm)\n')
 
-            if currentTime - hydratedTime > datetime.timedelta(hours=1):
+            if elapsedTime > datetime.timedelta(hours=1):
                 GPIO.output(blueLedPin, GPIO.HIGH)
                 print("수분을 섭취한 시간으로부터 1시간이 넘게 경과하여 파란색 LED를 켰습니다.")
             else:
                 print("수분을 섭취한 시간으로부터 1시간 경과하지 않아 파란색 LED는 켜지지 않습니다.")
                 GPIO.output(blueLedPin, GPIO.LOW)
 
-            if lastTdsValue > 500:
-                GPIO.output(blueLedPin, GPIO.HIGH)
-                print("TDS 수치가 500 mg/L를 초과하여 빨간색 LED를 켰습니다.")
+            if lastTdsValue > 1000:
+                GPIO.output(redLedPin, GPIO.HIGH)
+                print("TDS 수치가 1000mg/L를 초과하여 빨간색 LED를 켰습니다.")
             else:
-                GPIO.output(blueLedPin, GPIO.LOW)
-                print("TDS 수치가 500 mg/L 이하여서 빨간색 LED는 켜지지 않습니다.")
+                GPIO.output(redLedPin, GPIO.LOW)
+                print("TDS 수치가 1000mg/L 이하여서 빨간색 LED는 켜지지 않습니다.")
             time.sleep(10)
 
     except KeyboardInterrupt:
