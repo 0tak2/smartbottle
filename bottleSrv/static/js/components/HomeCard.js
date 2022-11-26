@@ -48,12 +48,12 @@ export default {
         })
 
         const tdsWarning = computed(() => {
-            if (value_tds < 30) {
-                return 'warning-0' // 30 미만인 경우 warning-0
-            } else if (value_tds < 60) {
-                return 'warning-1' // 30 이상 60 미만인 경우 warning-1
+            if (value_tds < 1000) {
+                return 'warning-0' // 1000 미만인 경우 warning-0
+            } else if (value_tds < 2000) {
+                return 'warning-1' // 1000 이상 2000 미만인 경우 warning-1
             } else {
-                return 'warning-2' // 60 이상인 경우 warning-2
+                return 'warning-2' // 2000 이상인 경우 warning-2
             }
         })
 
