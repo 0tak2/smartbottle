@@ -1,8 +1,5 @@
 import spidev
-import RPi.GPIO as GPIO
 import time
-
-GPIO.setmode(GPIO.BCM)
 
 spi = spidev.SpiDev()
 spi.open(0,0)

@@ -156,7 +156,7 @@ class LastHydration(Resource): # /api/hydration/last
         error = None
         try:
             raw_data = cursor.execute(
-                "SELECT * FROM hydration WHERE differ < 0 ORDER BY id DESC LIMIT 1",
+                "SELECT * FROM hydration WHERE differ < -20 ORDER BY id DESC LIMIT 1",
             ).fetchone()
 
             hydration_data = {
