@@ -116,9 +116,7 @@ def log(msg, color='orginal'):
         'orginal': 0
     }
 
-    print(f'\033[{COLORS[color]}m')
-    print(msg)
-    print('\033[0m')
+    print(f'\033[{COLORS[color]}m' + msg + '\033[0m')
 
 def main():
     try:
