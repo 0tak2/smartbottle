@@ -6,7 +6,7 @@ import requests
 
 #### 초기화 시작 ####
 # 루프 딜레이 시간
-interval = 30
+interval = 15
 
 # GPIO 초기화
 GPIO.setmode(GPIO.BCM)
@@ -151,7 +151,7 @@ def main():
             elapsedTime = currentTimeObj - hydratedTime
             lastTdsValue = getLastTds()
             log('# 서버로부터 최근 데이터를 가져왔습니다.', color='yellow')
-            log(f'* 마지막 수분 섭취 시간: {hydratedTime}\n\t({elapsedTime} 경과)', color='cyan')
+            log(f'* 마지막 수분 섭취 시간: {hydratedTime}\n\t\t\t({elapsedTime} 경과)', color='cyan')
             log(f'* 마지막 수분 섭취 용량: {hydratedVolume} ml', color='cyan')
             log(f'* 최근 TDS 수치: {lastTdsValue} mg/L(ppm)', color='cyan')
             log('* LED 상태: ', color='cyan')
