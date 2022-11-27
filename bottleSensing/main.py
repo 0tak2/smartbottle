@@ -33,7 +33,7 @@ vref = 5.0
 # Flask 서버 URL 지정
 baseURL = 'http://127.0.0.1:5000'
 
-print('*** GPIO 및 SPI 초기화 완료 ***')
+print('### GPIO 및 SPI 초기화 완료 ###')
 #### 초기화 끝 ####
 
 
@@ -108,7 +108,7 @@ def main():
             currentTime = currentTimeObj.strftime("%Y-%m-%d %H:%M:%S")
             
             print('\n──────────────────────────────────────────────────')
-            print(f'*** [{currentTime}] 새로운 작업이 시작되었습니다. ***')
+            print(f'### [{currentTime}] 새로운 작업이 시작되었습니다. ###')
 
             # 센서로부터 값 읽고 서버에 전송
             distance = getDistance(trigPin, echoPin)
@@ -117,39 +117,39 @@ def main():
             rawValue = getAnalogRead(0)
             currentTds = round(convertRawValueToTds(rawValue))
 
-            print(f'[{currentTime}] 센서로부터 새로운 데이터를 읽어들였습니다.')
-            print('현재 물 용량: ', currentVolume, 'ml')
-            print('TDS 수치: ', currentTds, 'mg/L(ppm)\n')
+            print('# 센서로부터 새로운 데이터를 읽어들였습니다.')
+            print('* 현재 물 용량: ', currentVolume, 'ml')
+            print('* TDS 수치: ', currentTds, 'mg/L(ppm)\n')
 
             try:
                 sendData('volume', currentTime, currentVolume)
                 sendData('tds', currentTime, currentTds)
-                print('데이터를 서버에 전송하였습니다.\n')
+                print('-> 데이터를 서버에 전송하였습니다.\n')
             except Exception as e:
-                print('서버에 데이터 전송 중 오류 발생\n', e)
+                print('-> 서버에 데이터 전송 중 오류 발생\n', e)
             
             # 서버에서 최근 데이터를 받아와 LED 조작
             hydratedTime, hydratedVolume = getLastHydration()
             elapsedTime = currentTimeObj - hydratedTime
             lastTdsValue = getLastTds()
-            print(f'[{currentTime}] 서버로부터 최근 데이터를 가져왔습니다.')
-            print(f'마지막 수분 섭취 시간: {hydratedTime}({elapsedTime} 경과)')
-            print('마지막 수분 섭취 용량: ', hydratedVolume, 'ml')
-            print('최근 TDS 수치: ', lastTdsValue, 'mg/L(ppm)\n')
-
+            print('# 서버로부터 최근 데이터를 가져왔습니다.')
+            print(f'* 마지막 수분 섭취 시간: {hydratedTime}({elapsedTime} 경과)')
+            print('* 마지막 수분 섭취 용량: ', hydratedVolume, 'ml')
+            print('* 최근 TDS 수치: ', lastTdsValue, 'mg/L(ppm)\n')
+            print('* LED 상태: ')
             if elapsedTime > datetime.timedelta(hours=1):
                 GPIO.output(blueLedPin, GPIO.HIGH)
-                print("수분을 섭취한 시간으로부터 1시간이 넘게 경과하여 파란색 LED를 켰습니다.")
+                print("<BLUE LED ON> 수분을 섭취한 시간으로부터 1시간 이상 경과")
             else:
-                print("수분을 섭취한 시간으로부터 1시간 경과하지 않아 파란색 LED는 켜지지 않습니다.")
+                print("<BLUE LED OFF> 수분을 섭취한 시간으로부터 1시간 이내")
                 GPIO.output(blueLedPin, GPIO.LOW)
 
             if lastTdsValue > 1000:
                 GPIO.output(redLedPin, GPIO.HIGH)
-                print("TDS 수치가 1000mg/L를 초과하여 빨간색 LED를 켰습니다.")
+                print("<RED LED ON> TDS 수치가 1000mg/L 초과")
             else:
                 GPIO.output(redLedPin, GPIO.LOW)
-                print("TDS 수치가 1000mg/L 이하여서 빨간색 LED는 켜지지 않습니다.")
+                print("<RED LED OFF> TDS 수치가 1000mg/L 이하")
             
             print('──────────────────────────────────────────────────\n')
             time.sleep(10)
