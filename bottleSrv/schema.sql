@@ -15,4 +15,4 @@ CREATE TABLE hydration (
 );
 
 INSERT INTO hydration (differ, current_vol)
-    VALUES (0, 0);
+    VALUES (-100, 0);
