@@ -138,8 +138,8 @@ def main():
             currentTds = round(convertRawValueToTds(rawValue))
 
             log('# 센서로부터 새로운 데이터를 읽어들였습니다.', color='yellow')
-            log('* 현재 물 용량: ', currentVolume, 'ml', color='cyan')
-            log('* TDS 수치: ', currentTds, 'mg/L(ppm)\n', color='cyan')
+            log(f'* 현재 물 용량: {currentVolume}ml ', color='cyan')
+            log(f'* TDS 수치: {currentTds} mg/L(ppm)\n', color='cyan')
 
             try:
                 sendData('volume', currentTime, currentVolume)
@@ -154,8 +154,8 @@ def main():
             lastTdsValue = getLastTds()
             log('# 서버로부터 최근 데이터를 가져왔습니다.', color='yellow')
             log(f'* 마지막 수분 섭취 시간: {hydratedTime}({elapsedTime} 경과)', color='cyan')
-            log('* 마지막 수분 섭취 용량: ', hydratedVolume, 'ml', color='cyan')
-            log('* 최근 TDS 수치: ', lastTdsValue, 'mg/L(ppm)', color='cyan')
+            log(f'* 마지막 수분 섭취 용량: {hydratedVolume} ml', color='cyan')
+            log(f'* 최근 TDS 수치: {lastTdsValue} mg/L(ppm)', color='cyan')
             log('* LED 상태: ', color='cyan')
             if elapsedTime > datetime.timedelta(hours=1):
                 GPIO.output(blueLedPin, GPIO.HIGH)
