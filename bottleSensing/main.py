@@ -111,7 +111,7 @@ def log(msg, color='orginal'):
         'yellow': 33,
         'blue': 34,
         'magenta': 32,
-        'cyan': 33,
+        'cyan': 96,
         'white': 34,
         'orginal': 0
     }
