@@ -126,7 +126,7 @@ def main():
             currentTime = currentTimeObj.strftime("%Y-%m-%d %H:%M:%S")
             
             log('\n──────────────────────────────────────────────────')
-            log(f'[{currentTime}] 새로운 작업이 시작되었습니다.', color='yellow')
+            log(f'[{currentTime}] 새로운 작업이 시작되었습니다.', color='green')
 
             # 센서로부터 값 읽고 서버에 전송
             distance = getDistance(trigPin, echoPin)
