@@ -151,23 +151,23 @@ def main():
             elapsedTime = currentTimeObj - hydratedTime
             lastTdsValue = getLastTds()
             log('# 서버로부터 최근 데이터를 가져왔습니다.', color='yellow')
-            log(f'* 마지막 수분 섭취 시간: {hydratedTime}({elapsedTime} 경과)', color='cyan')
+            log(f'* 마지막 수분 섭취 시간: {hydratedTime}\n\t({elapsedTime} 경과)', color='cyan')
             log(f'* 마지막 수분 섭취 용량: {hydratedVolume} ml', color='cyan')
             log(f'* 최근 TDS 수치: {lastTdsValue} mg/L(ppm)', color='cyan')
             log('* LED 상태: ', color='cyan')
             if elapsedTime > datetime.timedelta(hours=1):
                 GPIO.output(blueLedPin, GPIO.HIGH)
-                log("<BLUE LED ON> 수분을 섭취한 시간으로부터 1시간 이상 경과", color='blue')
+                log("\t<BLUE LED ON> 수분을 섭취한 시간으로부터 1시간 이상 경과", color='blue')
             else:
-                log("<BLUE LED OFF> 수분을 섭취한 시간으로부터 1시간 이내")
+                log("\t<BLUE LED OFF> 수분을 섭취한 시간으로부터 1시간 이내")
                 GPIO.output(blueLedPin, GPIO.LOW)
 
             if lastTdsValue > 1000:
                 GPIO.output(redLedPin, GPIO.HIGH)
-                log("<RED  LED ON> TDS 수치가 1000mg/L 초과", color='red')
+                log("\t<RED  LED ON> TDS 수치가 1000mg/L 초과", color='red')
             else:
                 GPIO.output(redLedPin, GPIO.LOW)
-                log("<RED  LED OFF> TDS 수치가 1000mg/L 이하")
+                log("\t<RED  LED OFF> TDS 수치가 1000mg/L 이하")
             
             log('──────────────────────────────────────────────────\n')
             time.sleep(interval)
