@@ -5,6 +5,9 @@ import datetime
 import requests
 
 #### 초기화 시작 ####
+# 루프 딜레이 시간
+interval = 30
+
 # GPIO 초기화
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
@@ -100,6 +103,23 @@ def getLastTds():
     tdsValue = responseDict['result'][0]['value_tds']
     return tdsValue
 
+def log(msg, color='orginal'):
+    COLORS = {
+        'black': 30,
+        'red': 31,
+        'green': 32,
+        'yellow': 33,
+        'blue': 34,
+        'magenta': 32,
+        'cyan': 33,
+        'white': 34,
+        'orginal': 0
+    }
+
+    print(f'\033[{COLORS[color]}m')
+    print(msg)
+    print('\033[0m')
+
 def main():
     try:
         while True:
@@ -107,8 +127,8 @@ def main():
             currentTimeObj = datetime.datetime.now()
             currentTime = currentTimeObj.strftime("%Y-%m-%d %H:%M:%S")
             
-            print('\n──────────────────────────────────────────────────')
-            print(f'[{currentTime}] 새로운 작업이 시작되었습니다. ###')
+            log('\n──────────────────────────────────────────────────')
+            log(f'[{currentTime}] 새로운 작업이 시작되었습니다.', color='yellow')
 
             # 센서로부터 값 읽고 서버에 전송
             distance = getDistance(trigPin, echoPin)
@@ -117,42 +137,42 @@ def main():
             rawValue = getAnalogRead(0)
             currentTds = round(convertRawValueToTds(rawValue))
 
-            print('# 센서로부터 새로운 데이터를 읽어들였습니다.')
-            print('* 현재 물 용량: ', currentVolume, 'ml')
-            print('* TDS 수치: ', currentTds, 'mg/L(ppm)\n')
+            log('# 센서로부터 새로운 데이터를 읽어들였습니다.', color='yellow')
+            log('* 현재 물 용량: ', currentVolume, 'ml', color='cyan')
+            log('* TDS 수치: ', currentTds, 'mg/L(ppm)\n', color='cyan')
 
             try:
                 sendData('volume', currentTime, currentVolume)
                 sendData('tds', currentTime, currentTds)
-                print('# 데이터를 서버에 전송하였습니다.\n')
+                log('# 데이터를 서버에 전송하였습니다.\n', color='yellow')
             except Exception as e:
-                print('# 서버에 데이터 전송 중 오류 발생\n', e)
+                log('# 서버에 데이터 전송 중 오류 발생\n' + str(e), color='magenta')
             
             # 서버에서 최근 데이터를 받아와 LED 조작
             hydratedTime, hydratedVolume = getLastHydration()
             elapsedTime = currentTimeObj - hydratedTime
             lastTdsValue = getLastTds()
-            print('# 서버로부터 최근 데이터를 가져왔습니다.')
-            print(f'* 마지막 수분 섭취 시간: {hydratedTime}({elapsedTime} 경과)')
-            print('* 마지막 수분 섭취 용량: ', hydratedVolume, 'ml')
-            print('* 최근 TDS 수치: ', lastTdsValue, 'mg/L(ppm)')
-            print('* LED 상태: ')
+            log('# 서버로부터 최근 데이터를 가져왔습니다.', color='yellow')
+            log(f'* 마지막 수분 섭취 시간: {hydratedTime}({elapsedTime} 경과)', color='cyan')
+            log('* 마지막 수분 섭취 용량: ', hydratedVolume, 'ml', color='cyan')
+            log('* 최근 TDS 수치: ', lastTdsValue, 'mg/L(ppm)', color='cyan')
+            log('* LED 상태: ', color='cyan')
             if elapsedTime > datetime.timedelta(hours=1):
                 GPIO.output(blueLedPin, GPIO.HIGH)
-                print("<BLUE LED ON> 수분을 섭취한 시간으로부터 1시간 이상 경과")
+                log("<BLUE LED ON> 수분을 섭취한 시간으로부터 1시간 이상 경과", color='blue')
             else:
-                print("<BLUE LED OFF> 수분을 섭취한 시간으로부터 1시간 이내")
+                log("<BLUE LED OFF> 수분을 섭취한 시간으로부터 1시간 이내")
                 GPIO.output(blueLedPin, GPIO.LOW)
 
             if lastTdsValue > 1000:
                 GPIO.output(redLedPin, GPIO.HIGH)
-                print("<RED  LED ON> TDS 수치가 1000mg/L 초과")
+                log("<RED  LED ON> TDS 수치가 1000mg/L 초과", color='red')
             else:
                 GPIO.output(redLedPin, GPIO.LOW)
-                print("<RED  LED OFF> TDS 수치가 1000mg/L 이하")
+                log("<RED  LED OFF> TDS 수치가 1000mg/L 이하")
             
-            print('──────────────────────────────────────────────────\n')
-            time.sleep(10)
+            log('──────────────────────────────────────────────────\n')
+            time.sleep(interval)
 
     except KeyboardInterrupt:
         return 0
