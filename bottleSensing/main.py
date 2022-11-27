@@ -108,7 +108,7 @@ def main():
             currentTime = currentTimeObj.strftime("%Y-%m-%d %H:%M:%S")
             
             print('\n──────────────────────────────────────────────────')
-            print(f'### [{currentTime}] 새로운 작업이 시작되었습니다. ###')
+            print(f'[{currentTime}] 새로운 작업이 시작되었습니다. ###')
 
             # 센서로부터 값 읽고 서버에 전송
             distance = getDistance(trigPin, echoPin)
@@ -124,9 +124,9 @@ def main():
             try:
                 sendData('volume', currentTime, currentVolume)
                 sendData('tds', currentTime, currentTds)
-                print('-> 데이터를 서버에 전송하였습니다.\n')
+                print('# 데이터를 서버에 전송하였습니다.\n')
             except Exception as e:
-                print('-> 서버에 데이터 전송 중 오류 발생\n', e)
+                print('# 서버에 데이터 전송 중 오류 발생\n', e)
             
             # 서버에서 최근 데이터를 받아와 LED 조작
             hydratedTime, hydratedVolume = getLastHydration()
@@ -135,7 +135,7 @@ def main():
             print('# 서버로부터 최근 데이터를 가져왔습니다.')
             print(f'* 마지막 수분 섭취 시간: {hydratedTime}({elapsedTime} 경과)')
             print('* 마지막 수분 섭취 용량: ', hydratedVolume, 'ml')
-            print('* 최근 TDS 수치: ', lastTdsValue, 'mg/L(ppm)\n')
+            print('* 최근 TDS 수치: ', lastTdsValue, 'mg/L(ppm)')
             print('* LED 상태: ')
             if elapsedTime > datetime.timedelta(hours=1):
                 GPIO.output(blueLedPin, GPIO.HIGH)
@@ -146,10 +146,10 @@ def main():
 
             if lastTdsValue > 1000:
                 GPIO.output(redLedPin, GPIO.HIGH)
-                print("<RED LED ON> TDS 수치가 1000mg/L 초과")
+                print("<RED  LED ON> TDS 수치가 1000mg/L 초과")
             else:
                 GPIO.output(redLedPin, GPIO.LOW)
-                print("<RED LED OFF> TDS 수치가 1000mg/L 이하")
+                print("<RED  LED OFF> TDS 수치가 1000mg/L 이하")
             
             print('──────────────────────────────────────────────────\n')
             time.sleep(10)
