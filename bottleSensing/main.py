@@ -32,6 +32,8 @@ vref = 5.0
 
 # Flask 서버 URL 지정
 baseURL = 'http://127.0.0.1:5000'
+
+print('*** GPIO 및 SPI 초기화 완료 ***')
 #### 초기화 끝 ####
 
 
@@ -47,7 +49,7 @@ def getDistance(trigPin, echoPin):
         stop = time.time()
 
     elapsedTime = stop - start
-    distance = elapsedTime * 34300 /2
+    distance = elapsedTime * 34300 / 2
     return distance
 
 def convertDistanceToVolume(distance):
@@ -101,10 +103,14 @@ def getLastTds():
 def main():
     try:
         while True:
-            # 센서로부터 값 읽고 서버에 전송
+            # 작업 시작 시간 기록
             currentTimeObj = datetime.datetime.now()
             currentTime = currentTimeObj.strftime("%Y-%m-%d %H:%M:%S")
+            
+            print('\n──────────────────────────────────────────────────')
+            print(f'*** [{currentTime}] 새로운 작업이 시작되었습니다. ***')
 
+            # 센서로부터 값 읽고 서버에 전송
             distance = getDistance(trigPin, echoPin)
             currentVolume = round(convertDistanceToVolume(distance))
 
@@ -144,6 +150,8 @@ def main():
             else:
                 GPIO.output(redLedPin, GPIO.LOW)
                 print("TDS 수치가 1000mg/L 이하여서 빨간색 LED는 켜지지 않습니다.")
+            
+            print('──────────────────────────────────────────────────\n')
             time.sleep(10)
 
     except KeyboardInterrupt:
